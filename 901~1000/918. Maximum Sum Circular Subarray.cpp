@@ -1,20 +1,19 @@
-//TLE O(n^2)
 class Solution {
 public:
     int maxSubarraySumCircular(vector<int>& nums) {
-        int ans = nums[0], temp, len = nums.size(), i, j;
-        nums.insert(nums.end(), nums.begin(), nums.end());
-        for(j = 0; j < len; j++){
-            vector<int> sum(nums.begin() + j, nums.begin() + j + len);
-            temp = sum[0];
-            for(i = 1; i < len; i++){
-                sum[i] = max(sum[i], sum[i - 1] + sum[i]);
-                if(sum[i] > temp)
-                    temp = sum[i];
-            }
-            if(temp > ans)
-                ans = temp;
+        int n = nums.size();
+        if(n == 1) return nums[0];
+
+        int totalSum = 0, maxSum = nums[0], minSum = nums[0], currentMax = 0, currentMin = 0;
+        for(int i = 0; i < n; i++){
+            totalSum += nums[i];
+            currentMax = max(nums[i], currentMax + nums[i]);
+            maxSum = max(maxSum, currentMax);
+            currentMin = min(nums[i], currentMin + nums[i]);
+            minSum = min(minSum, currentMin);
         }
-        return ans;
+      
+        if(totalSum == minSum) return maxSum;
+        return max(maxSum, totalSum - minSum);
     }
 };
