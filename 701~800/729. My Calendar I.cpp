@@ -1,15 +1,14 @@
 class MyCalendar {
 private:
-    vector<pair<int, int> > booktime;
+    map<int, int> booktime;
 public:
     MyCalendar() {}
     
     bool book(int startTime, int endTime) {
-        for(pair<int, int> &i : booktime){
-            if(i.first < endTime && i.second > startTime)
-                return false;
-        }
-        booktime.emplace_back(make_pair(startTime, endTime));
+        map<int, int>::iterator it = booktime.upper_bound(startTime);
+        if(it != booktime.end() && it->second < endTime)
+            return false;
+        booktime[endTime] = startTime;
         return true;
     }
 };
