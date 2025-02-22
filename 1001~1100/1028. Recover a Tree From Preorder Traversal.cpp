@@ -23,13 +23,19 @@ public:
     TreeNode* recoverFromPreorder(string traversal) {
         int st = 0, ed = 0, nowlay = 0, len = traversal.size(), templay;
         while(ed < len && traversal[ed] != '-') ++ed;
-        TreeNode *root = new TreeNode(string_to_int(traversal, st, ed)), *now = root, *bef[1000] = {root};
+        TreeNode *root = new TreeNode(string_to_int(traversal, st, ed)), *now = root;
+        stack<TreeNode*> bef;
+        bef.push(root);
 
         while(ed < len){
             st = ed;
             while(traversal[ed] == '-') ++ed;
             templay = ed - st;
-            while(templay <= nowlay) now = bef[--nowlay];
+            while(templay <= nowlay){
+                --nowlay;
+                bef.pop();
+            }
+            now = bef.top();
 
             st = ed;
             while(ed < len && traversal[ed] != '-') ++ed;
@@ -40,7 +46,8 @@ public:
                 now->right = new TreeNode(string_to_int(traversal, st, ed));
                 now = now->right;
             }
-            bef[++nowlay] = now;
+            ++nowlay;
+            bef.push(now);
         }
         return root;
     }
